@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SR Bakes — Artisan Chocolates & Desserts</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --burgundy: #2d0a1e;
+    --deep: #1a0612;
+    --rose: #c4607a;
+    --blush: #e8a0b0;
+    --gold: #c9963a;
+    --gold-light: #f0c96a;
+    --cream: #f9f0e6;
+    --pink-soft: #f7dde5;
+    --text-light: #f5e8ed;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--text-light);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 22px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(26,6,18,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    color: var(--blush);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    transition: opacity 0.3s, color 0.3s;
+  }
+
+  .nav-links a:hover {
+    opacity: 1;
+    color: var(--gold-light);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 50%, rgba(196,96,122,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 75% 60%, rgba(201,150,58,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 100% at 50% 50%, rgba(45,10,30,1) 0%, rgba(26,6,18,1) 100%);
+  }
+
+  /* Animated bokeh circles */
+  .bokeh {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .bokeh-1 { width:300px; height:300px; background:rgba(196,96,122,0.15); top:10%; left:5%; animation-delay:0s; }
+  .bokeh-2 { width:200px; height:200px; background:rgba(201,150,58,0.12); top:60%; right:10%; animation-delay:3s; }
+  .bokeh-3 { width:250px; height:250px; background:rgba(232,160,176,0.1); bottom:5%; left:40%; animation-delay:5s; }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  /* Glitter particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    animation: sparkle 4s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%,100% { opacity:0; transform:scale(0); }
+    50% { opacity:0.8; transform:scale(1); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 20px;
+    animation: fadeUp 1.2s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(40px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--cream);
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .hero-title-script {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: var(--blush);
+    display: block;
+    margin-top: -10px;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(245,232,237,0.7);
+    max-width: 520px;
+    margin: 0 auto 48px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.1s forwards;
+  }
+
+  .btn-primary {
+    padding: 16px 44px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--deep);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(201,150,58,0.4);
+  }
+
+  .btn-outline {
+    padding: 15px 44px;
+    background: transparent;
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(245,232,237,0.3);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--blush);
+    color: var(--blush);
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    animation: fadeUp 1s ease 1.5s forwards, pulse 2s ease 2.5s infinite;
+    z-index: 2;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+
+  .scroll-hint span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollDown 2s ease infinite;
+  }
+
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 100px 60px; }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .section-title em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--blush);
+  }
+
+  .section-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 20px 0 40px;
+  }
+
+  /* ── MARQUEE STRIP ── */
+  .marquee-strip {
+    background: linear-gradient(135deg, var(--rose), var(--gold));
+    padding: 14px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-inner {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+  }
+
+  .marquee-inner span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--deep);
+    padding: 0 40px;
+  }
+
+  .marquee-inner span::before {
+    content: '✦';
+    margin-right: 40px;
+    opacity: 0.6;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    background: var(--burgundy);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+  }
+
+  .about-img-main {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-img-accent {
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 55%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 4px solid var(--burgundy);
+  }
+
+  .about-badge {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--deep);
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 1.3;
+    box-shadow: 0 8px 30px rgba(201,150,58,0.4);
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: rgba(245,232,237,0.75);
+    margin-bottom: 20px;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(245,232,237,0.1);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,232,237,0.5);
+    margin-top: 6px;
+  }
+
+  /* ── PRODUCTS ── */
+  .products {
+    background: var(--deep);
+  }
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .product-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--burgundy);
+    transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .product-card:hover {
+    transform: translateY(-8px);
+  }
+
+  .product-card:first-child {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .product-img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease, filter 0.4s ease;
+    filter: brightness(0.9) saturate(1.1);
+  }
+
+  .product-card:first-child .product-img {
+    aspect-ratio: 21/9;
+  }
+
+  .product-card:hover .product-img {
+    transform: scale(1.06);
+    filter: brightness(1) saturate(1.2);
+  }
+
+  .product-info {
+    padding: 28px;
+  }
+
+  .product-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .product-desc {
+    font-size: 0.82rem;
+    color: rgba(245,232,237,0.55);
+    line-height: 1.7;
+  }
+
+  .product-tag {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 16px;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,150,58,0.4);
+    color: var(--gold);
+    transition: all 0.3s;
+  }
+
+  .product-card:hover .product-tag {
+    background: var(--gold);
+    color: var(--deep);
+    border-color: var(--gold);
+  }
+
+  /* ── FEATURED BANNER ── */
+  .featured-banner {
+    padding: 0 60px 100px;
+    background: var(--deep);
+  }
+
+  .banner-inner {
+    background: linear-gradient(135deg, var(--burgundy) 0%, #3d0a2a 50%, var(--burgundy) 100%);
+    padding: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .banner-inner::before {
+    content: 'SR';
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 20rem;
+    font-weight: 700;
+    color: rgba(201,150,58,0.04);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .banner-img {
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+    display: block;
+  }
+
+  .banner-text .section-title { font-size: clamp(1.8rem, 3vw, 2.8rem); }
+
+  .banner-features {
+    list-style: none;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .banner-features li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.88rem;
+    color: rgba(245,232,237,0.75);
+  }
+
+  .banner-features li::before {
+    content: '✦';
+    color: var(--gold);
+    font-size: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    background: var(--burgundy);
+    text-align: center;
+  }
+
+  .testimonials .section-line {
+    margin: 20px auto 60px;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .testimonial-card {
+    background: rgba(26,6,18,0.5);
+    padding: 40px;
+    border: 1px solid rgba(245,232,237,0.06);
+    position: relative;
+  }
+
+  .testimonial-card::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6rem;
+    color: var(--gold);
+    opacity: 0.15;
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    line-height: 1;
+  }
+
+  .testimonial-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    line-height: 1.8;
+    color: rgba(245,232,237,0.8);
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .testimonial-author {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .stars {
+    color: var(--gold-light);
+    font-size: 0.75rem;
+    margin-bottom: 20px;
+    letter-spacing: 3px;
+  }
+
+  /* ── ORDERING ── */
+  .ordering {
+    background: var(--deep);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .order-left {
+    background: linear-gradient(135deg, var(--rose), #8b2340);
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .order-left .section-title { color: var(--cream); }
+  .order-left .section-tag { color: rgba(249,240,230,0.7); }
+  .order-left .section-line { background: linear-gradient(to right, var(--cream), transparent); }
+
+  .order-left p {
+    color: rgba(249,240,230,0.8);
+    font-size: 0.92rem;
+    line-height: 1.9;
+    margin-bottom: 40px;
+  }
+
+  .order-right {
+    padding: 50px 60px;
+    background: var(--burgundy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .order-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .gform-wrapper {
+    width: 100%;
+    height: 640px;
+    border: none;
+    display: block;
+    border-radius: 2px;
+    filter: invert(1) hue-rotate(180deg) brightness(0.88) saturate(1.2);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid rgba(245,232,237,0.06);
+    padding: 80px 60px 40px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand .nav-logo {
+    font-size: 2rem;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .footer-brand p {
+    font-size: 0.85rem;
+    color: rgba(245,232,237,0.5);
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+
+  .social-links { display: flex; gap: 16px; }
+
+  .social-links a {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(245,232,237,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(245,232,237,0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+
+  .social-links a:hover {
+    border-color: var(--rose);
+    color: var(--rose);
+    background: rgba(196,96,122,0.1);
+  }
+
+  .footer-col h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 24px;
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .footer-col ul li a {
+    font-size: 0.83rem;
+    color: rgba(245,232,237,0.5);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-col ul li a:hover { color: var(--blush); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(245,232,237,0.06);
+    padding-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-bottom p {
+    font-size: 0.75rem;
+    color: rgba(245,232,237,0.3);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 18px 24px; }
+    .nav-links { display: none; }
+    section { padding: 70px 24px; }
+    .about { grid-template-columns: 1fr; }
+    .about-img-accent { display: none; }
+    .products-grid { grid-template-columns: 1fr; }
+    .product-card:first-child { grid-column: span 1; }
+    .product-card:first-child .product-img { aspect-ratio: 16/9; }
+    .banner-inner { grid-template-columns: 1fr; padding: 40px 24px; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .ordering { grid-template-columns: 1fr; }
+    .order-left, .order-right { padding: 50px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .featured-banner { padding: 0 24px 70px; }
+    .form-row { grid-template-columns: 1fr; }
+    .products-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">SR <span>Bakes</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#products">Collections</a></li>
+    <li><a href="#order">Order</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="bokeh bokeh-1"></div>
+  <div class="bokeh bokeh-2"></div>
+  <div class="bokeh bokeh-3"></div>
+
+  <div class="particles" id="particles"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Handcrafted with Love · Tiruchengode</p>
+    <h1 class="hero-title">SR Bakes</h1>
+    <span class="hero-title-script">Artisan Chocolates & Desserts</span>
+    <p class="hero-desc">Where every bite tells a story of passion, premium ingredients, and meticulous craftsmanship. From our signature pink chocolates to rich artisan bars — indulgence elevated.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-primary">Explore Collections</a>
+      <a href="#order" class="btn-outline">Order Now</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span>Pink Chocolates</span><span>Artisan Bars</span><span>Premium Brownies</span><span>White Chocolate Bites</span><span>Luxury Desserts</span><span>Gifting Collections</span>
+    <span>Pink Chocolates</span><span>Artisan Bars</span><span>Premium Brownies</span><span>White Chocolate Bites</span><span>Luxury Desserts</span><span>Gifting Collections</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual">
+    <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_40_PM__1_.jpeg" alt="SR Bakes Desserts" class="about-img-main">
+    <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_26_PM.jpeg" alt="Pink Chocolate" class="about-img-accent">
+    <div class="about-badge">Premium<br>Quality<br>✦<br>Made with<br>Love</div>
+  </div>
+  <div class="about-text">
+    <span class="section-tag">Our Story</span>
+    <h2 class="section-title">Crafted with <em>Passion</em></h2>
+    <div class="section-line"></div>
+    <p>SR Bakes was born from a deep love for the art of chocolate-making and the joy of gifting. Every creation that leaves our kitchen carries with it a promise — of luxury, quality, and unforgettable flavour.</p>
+    <p>From our signature ruby-pink heart chocolates to intricately designed artisan bars and silky dessert cups, each product is handcrafted using premium ingredients and techniques perfected over years of passionate baking.</p>
+    <p>We believe every occasion deserves something truly special. Whether it's a celebration, a heartfelt gift, or simply an indulgent moment for yourself — SR Bakes is here to make it extraordinary.</p>
+    <div class="about-stats">
+      <div>
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Chocolate Varieties</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Premium Ingredients</div>
+      </div>
+      <div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Made with Love</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-header">
+    <div>
+      <span class="section-tag">Our Collections</span>
+      <h2 class="section-title">Signature <em>Creations</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <a href="#order" class="btn-outline" style="white-space:nowrap">View All & Order</a>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_39_PM__2_.jpeg" alt="Artisan Chocolates" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">Signature Collection</div>
+        <div class="product-name">Artisan Chocolate Bars</div>
+        <div class="product-desc">Rich milk chocolate bars with intricate geometric designs — circle dots, diamond lattice, wave patterns and more. Gourmet quality, finely crafted.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_39_PM__1_.jpeg" alt="Pink Desserts" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">Dessert Cups</div>
+        <div class="product-name">Luxurious Pink Desserts</div>
+        <div class="product-desc">Dreamy pink dessert cups topped with chocolate flakes. Indulgent, creamy, and packaged to perfection.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_26_PM.jpeg" alt="Pink Chocolate Bar" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">Pink Chocolate</div>
+        <div class="product-name">Heart-Embossed Pink Bar</div>
+        <div class="product-desc">Luxury pink chocolate bar with an all-over embossed heart texture. Creamy, unique, and perfect for gifting.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_39_PM.jpeg" alt="Pink Delights" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">Bite-Sized</div>
+        <div class="product-name">Pink Chocolate Delights</div>
+        <div class="product-desc">Heart shapes, gift boxes, trees and stars — a whimsical assortment of pink chocolates that melt in your mouth.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_40_PM__2_.jpeg" alt="Brownies" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">Baked Goods</div>
+        <div class="product-name">Fudge Brownies</div>
+        <div class="product-desc">Rich, gooey brownies packed with chocolate chips, baked to fudgy perfection and boxed elegantly.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_40_PM.jpeg" alt="White Chocolates" class="product-img">
+      <div class="product-info">
+        <div class="product-cat">White Chocolate</div>
+        <div class="product-name">Sculpted White Bites</div>
+        <div class="product-desc">Intricately moulded white chocolate pieces — spirals, snowflakes, and stars — creamy and delicate.</div>
+        <span class="product-tag">Explore →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED BANNER -->
+<div class="featured-banner">
+  <div class="banner-inner">
+    <img src="/mnt/user-data/uploads/WhatsApp_Image_2026-03-23_at_6_28_40_PM__1_.jpeg" alt="SR Bakes Premium Desserts" class="banner-img">
+    <div class="banner-text">
+      <span class="section-tag">Why SR Bakes</span>
+      <h2 class="section-title">Every Bite is a <em>Memory</em></h2>
+      <div class="section-line"></div>
+      <p style="color:rgba(245,232,237,0.7);font-size:0.92rem;line-height:1.9;">We don't just make chocolates — we craft experiences. Every product is a labour of love, made to be shared, gifted, and remembered.</p>
+      <ul class="banner-features">
+        <li>Premium Belgian & Compound Chocolate</li>
+        <li>Handcrafted in small batches for freshness</li>
+        <li>Custom gifting & bulk orders available</li>
+        <li>Elegant, gift-ready packaging</li>
+        <li>Made fresh — no preservatives</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <span class="section-tag">Happy Customers</span>
+  <h2 class="section-title">Words of <em>Love</em></h2>
+  <div class="section-line" style="margin:20px auto 60px;"></div>
+
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The pink chocolate bars are absolutely stunning — they taste as incredible as they look. Ordered for a wedding favour and everyone was blown away!</p>
+      <div class="testimonial-author">— Priya S., Chennai</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">SR Bakes brownies are the most fudgy, decadent brownies I've had. The packaging is so elegant too — perfect for gifting. Will order again!</p>
+      <div class="testimonial-author">— Karthik R., Coimbatore</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p class="testimonial-text">The dessert cups were a hit at our party. Pink, gorgeous, and so creamy. SR Bakes truly puts love into every product — you can taste it.</p>
+      <div class="testimonial-author">— Meera L., Bangalore</div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<div class="ordering" id="order">
+  <div class="order-left">
+    <span class="section-tag">Place Your Order</span>
+    <h2 class="section-title">Order Your <em>Box of Joy</em></h2>
+    <div class="section-line"></div>
+    <p>We accept custom orders for all occasions — birthdays, weddings, corporate gifting, and festive celebrations. Minimum order quantities apply for custom designs.</p>
+    <p>Reach us on WhatsApp or fill the form for a quick response. We ship within Coimbatore and surrounding areas.</p>
+    <a href="https://wa.me/91XXXXXXXXXX" class="btn-primary" style="display:inline-block;width:fit-content">
+      WhatsApp Us
+    </a>
+  </div>
+  <div class="order-right">
+    <div class="order-form">
+    <span class="section-tag">Quick Order Form</span>
+      <iframe 
+        class="gform-wrapper"
+        src="https://docs.google.com/forms/d/1_D2hmGA3F6QG3xc3f5Pe9o1YgS5rfMXwSBVbNFVpAgY/viewform?embedded=true"
+        title="SR Bakes Order Form"
+        loading="lazy"
+      >Loading order form…</iframe>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo" style="display:inline-block;margin-bottom:20px;">SR <span>Bakes</span></a>
+      <p>Artisan chocolates and desserts crafted with love in Coimbatore. Premium quality, unforgettable flavours, and packaging that delights.</p>
+      <div class="social-links">
+        <a href="#" title="Instagram">✦</a>
+        <a href="#" title="Facebook">f</a>
+        <a href="#" title="WhatsApp">W</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="#">Pink Chocolates</a></li>
+        <li><a href="#">Artisan Bars</a></li>
+        <li><a href="#">Dessert Cups</a></li>
+        <li><a href="#">Brownies</a></li>
+        <li><a href="#">White Chocolate</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Information</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Custom Orders</a></li>
+        <li><a href="#">Gifting Guides</a></li>
+        <li><a href="#">Delivery Info</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">Coimbatore, Tamil Nadu</a></li>
+        <li><a href="#">WhatsApp Order</a></li>
+        <li><a href="#">Instagram DM</a></li>
+        <li><a href="#"><span class="__cf_email__" data-cfemail="9be8e9f9faf0fee8dbfef6faf2f7b5f8f4f6">[email&#160;protected]</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 SR Bakes. All rights reserved. Crafted with Love.</p>
+    <p>Made in Coimbatore ✦ Premium Artisan Chocolates</p>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Generate sparkle particles
+  const container = document.getElementById('particles');
+  for(let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      animation-delay: ${Math.random()*4}s;
+      animation-duration: ${3 + Math.random()*3}s;
+      width: ${Math.random() > 0.7 ? 4 : 2}px;
+      height: ${Math.random() > 0.7 ? 4 : 2}px;
+      background: ${Math.random() > 0.5 ? '#f0c96a' : '#e8a0b0'};
+    `;
+    container.appendChild(p);
+  }
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if(target) { e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+
+  // Intersection Observer for fade-in
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.product-card, .testimonial-card, .about-visual, .ab
